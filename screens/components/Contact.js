@@ -9,8 +9,8 @@ import {
 
 const Contact = ({ name, avatarUrl }) => {
     return (
-        <VStack space={2} mt={5}>
-            <VStack space={2} mt={2} width={300}>
+        <VStack space={1} mt={1}>
+            <VStack space={1} mt={1} width={300}>
                 <HStack space={5} width={"100%"} justifyContent="flex-start" alignItems={"center"}>
                     <Avatar
                         source={{

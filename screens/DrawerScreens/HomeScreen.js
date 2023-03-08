@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, SafeAreaView, StyleSheet } from "react-native";
+import { View, SafeAreaView, StyleSheet, ScrollView, SectionList } from "react-native";
 import {
     Heading,
     Text,
@@ -20,83 +20,90 @@ import Contact from "../components/Contact";
 const HomeScreen = () => {
     const [searchTerm, setSearchTerm] = useState("");
     return (
-        <SafeAreaView >
-            <Stack space={4} w="100%" maxW="300px" mx="auto" alignItems="center">
-            <Heading size="lg" color={"#70B5F9"} mt={9}>
-                Add Contacts
-            </Heading>
+        <View style={styles.container}>
+            <ScrollView>
+                <Stack space={4} w="100%" maxW="300px" mx="auto" alignItems="center">
+                    <Heading size="lg" color={"#70B5F9"} mt={9}>
+                        Add Contacts
+                    </Heading>
 
-            <HStack space={10} mt={5}>
-                <VStack space={2}>
-                    <Box alignItems="center">
+                    <HStack space={10} mt={5}>
+                        <VStack space={2}>
+                            <Box alignItems="center">
+                                <IconButton
+                                    icon={<Icon as={MaterialIcons} name="library-add" />}
+                                    borderRadius="full"
+                                    p={3}
+                                    color="#70B5F9"
+                                    variant={"solid"}
+                                />
+                                <Text color="muted.500">New</Text>
+                            </Box>
+                        </VStack>
+                        <VStack space={2}>
+                            <Box alignItems="center">
+                                <IconButton
+                                    icon={<Icon as={AntDesign} name="contacts" />}
+                                    borderRadius="full"
+                                    p={3}
+                                    color="#70B5F9"
+                                    variant={"solid"}
+                                />
+                                <Text color="muted.500">Phone Book</Text>
+                            </Box>
+                        </VStack>
+                        <VStack space={2}>
+                            <Box alignItems="center">
+                                <IconButton
+                                    icon={<Icon as={SimpleLineIcons} name="envelope" />}
+                                    borderRadius="full"
+                                    p={3}
+                                    color="#70B5F9"
+                                    variant={"solid"}
+                                />
+                                <Text color="muted.500">Email</Text>
+                            </Box>
+                        </VStack>
+                    </HStack>
+                    <Divider my={10} />
+                    <Input
+                        variant="outline"
+                        placeholder="Search Contact"
+                        placeholderTextColor={"#70B5F9"}
+                        onChangeText={(searchTerm) => setSearchTerm(searchTerm)}
+                    />
+                    <Button
+                        color="#70B5F9"
+                        variant="solid"
+                        mt={5}
+                        _text={{ color: "#fff" }}
+                        width={"100%"}
+                    >
+                        Search
+                    </Button>
+                    <Contact name="John Doe" avatarUrl={""} />
+                    <Contact name="John Doe" avatarUrl={""} />
+                    <Contact name="John Doe" avatarUrl={""} />
+                    <Contact name="John Doe" avatarUrl={""} />
+                    <Contact name="John Doe" avatarUrl={""} />
+                </Stack>
+            </ScrollView>
+            <Box bg="white" safeAreaTop width="100%" maxW="100%" alignSelf="center">
+                <VStack bg="#307ecc" alignItems="flex-start" safeAreaBottom shadow={6} justifyContent="center" >
+                    <Box p={2} alignItems={"center"}>
                         <IconButton
-                            icon={<Icon as={MaterialIcons} name="library-add" />}
+                            icon={<Icon as={AntDesign} name="contacts" color="#70B5F9" />}
                             borderRadius="full"
-                            p={3}
+                            width={10} height={10}
                             color="#70B5F9"
+                            bg={"#fff"}
                             variant={"solid"}
                         />
-                        <Text color="muted.500">New</Text>
+                        <Text color="white">Refresh Contacts</Text>
                     </Box>
                 </VStack>
-                <VStack space={2}>
-                    <Box alignItems="center">
-                        <IconButton
-                            icon={<Icon as={AntDesign} name="contacts" />}
-                            borderRadius="full"
-                            p={3}
-                            color="#70B5F9"
-                            variant={"solid"}
-                        />
-                        <Text color="muted.500">Phone Book</Text>
-                    </Box>
-                </VStack>
-                <VStack space={2}>
-                    <Box alignItems="center">
-                        <IconButton
-                            icon={<Icon as={SimpleLineIcons} name="envelope" />}
-                            borderRadius="full"
-                            p={3}
-                            color="#70B5F9"
-                            variant={"solid"}
-                        />
-                        <Text color="muted.500">Email</Text>
-                    </Box>
-                </VStack>
-            </HStack>
-            <Divider my={10} />
-            <Input
-                variant="outline"
-                placeholder="Search Contact"
-                placeholderTextColor={"#70B5F9"}
-                onChangeText={(searchTerm) => setSearchTerm(searchTerm)}
-            />
-            <Button
-                color="#70B5F9"
-                variant="solid"
-                mt={5}
-                _text={{ color: "#fff" }}
-                width={"100%"}
-            >
-                Search
-            </Button>
-            <Contact name="John Doe" avatarUrl={""} />
-            </Stack>
-            <Box flex={1} bg="white" safeAreaTop width="100%" maxW="300px" alignSelf="center">
-            <HStack bg="indigo.600" alignItems="center" safeAreaBottom shadow={6}>
-                    <Box alignItems="center">
-                        <IconButton
-                            icon={<Icon as={AntDesign} name="contacts" />}
-                            borderRadius="full"
-                            p={3}
-                            color="#70B5F9"
-                            variant={"solid"}
-                        />
-                        <Text color="muted.500">Phone Book</Text>
-                    </Box>
-                </HStack>
-                </Box>
-         </SafeAreaView>
+            </Box>
+        </View>
     );
 };
 

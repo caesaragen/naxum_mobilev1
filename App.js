@@ -30,7 +30,7 @@ const Auth = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="RegisterScreen"
+        name="Logout"
         component={Logout}
         options={{
           title: 'Logout', //Set Header Title

@@ -83,9 +83,6 @@ const HomeScreen = () => {
                     </Button>
                     <Contact name="John Doe" avatarUrl={""} />
                     <Contact name="John Doe" avatarUrl={""} />
-                    <Contact name="John Doe" avatarUrl={""} />
-                    <Contact name="John Doe" avatarUrl={""} />
-                    <Contact name="John Doe" avatarUrl={""} />
                 </Stack>
             </ScrollView>
             <Box bg="white" safeAreaTop width="100%" maxW="100%" alignSelf="center">

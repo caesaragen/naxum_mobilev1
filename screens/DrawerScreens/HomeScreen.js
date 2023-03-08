@@ -1,87 +1,102 @@
-import React from "react";
-import { View,  SafeAreaView, StyleSheet } from "react-native";
-import { Heading,Text, HStack, VStack, Icon,IconButton, Box } from "native-base";
+import React, { useState } from "react";
+import { View, SafeAreaView, StyleSheet } from "react-native";
+import {
+    Heading,
+    Text,
+    HStack,
+    VStack,
+    Icon,
+    IconButton,
+    Box,
+    Divider,
+    Input,
+    Stack,
+    Button,
+    Avatar
+} from "native-base";
 import { MaterialIcons, AntDesign, SimpleLineIcons } from "@expo/vector-icons";
+import Contact from "../components/Contact";
 
 const HomeScreen = () => {
+    const [searchTerm, setSearchTerm] = useState("");
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView >
+            <Stack space={4} w="100%" maxW="300px" mx="auto" alignItems="center">
             <Heading size="lg" color={"#70B5F9"} mt={9}>
                 Add Contacts
             </Heading>
 
             <HStack space={10} mt={5}>
                 <VStack space={2}>
-                <Box alignItems="center">
-                <IconButton icon={<Icon as={MaterialIcons} name="library-add" />} borderRadius="full" p={3} color="#70B5F9" variant={"solid"} />
-                <Text
-                color="muted.500"
-                >
-                    New
-                    </Text>
-                </Box>
+                    <Box alignItems="center">
+                        <IconButton
+                            icon={<Icon as={MaterialIcons} name="library-add" />}
+                            borderRadius="full"
+                            p={3}
+                            color="#70B5F9"
+                            variant={"solid"}
+                        />
+                        <Text color="muted.500">New</Text>
+                    </Box>
                 </VStack>
                 <VStack space={2}>
-                <Box alignItems="center">
-                <IconButton icon={<Icon as={AntDesign} name="contacts" />} borderRadius="full" p={3} color="#70B5F9" variant={"solid"} />
-                <Text
-                color="muted.500"
-                >
-                    Phone Book
-                    </Text>
-                </Box>
+                    <Box alignItems="center">
+                        <IconButton
+                            icon={<Icon as={AntDesign} name="contacts" />}
+                            borderRadius="full"
+                            p={3}
+                            color="#70B5F9"
+                            variant={"solid"}
+                        />
+                        <Text color="muted.500">Phone Book</Text>
+                    </Box>
                 </VStack>
                 <VStack space={2}>
-                <Box alignItems="center">
-                <IconButton icon={<Icon as={SimpleLineIcons} name="envelope" />} borderRadius="full" p={3} color="#70B5F9" variant={"solid"} />
-                <Text
-                color="muted.500"
-                >
-                    Email
-                    </Text>
-                </Box>
+                    <Box alignItems="center">
+                        <IconButton
+                            icon={<Icon as={SimpleLineIcons} name="envelope" />}
+                            borderRadius="full"
+                            p={3}
+                            color="#70B5F9"
+                            variant={"solid"}
+                        />
+                        <Text color="muted.500">Email</Text>
+                    </Box>
                 </VStack>
             </HStack>
-            <View style={{ flex: 1, padding: 16 }}>
-                <View
-                    style={{
-                        flex: 1,
-                        alignItems: "center",
-                        justifyContent: "center",
-                    }}
-                >
-                    <Text
-                        style={{
-                            fontSize: 20,
-                            textAlign: "center",
-                            marginBottom: 16,
-                        }}
-                    >
-                        Example of Splash, Login and Sign Up in React Native
-                        {"\n\n"}
-                        This is the Home Screen
-                    </Text>
-                </View>
-                <Text
-                    style={{
-                        fontSize: 18,
-                        textAlign: "center",
-                        color: "grey",
-                    }}
-                >
-                    Splash, Login and Register Example{"\n"}React Native
-                </Text>
-                <Text
-                    style={{
-                        fontSize: 16,
-                        textAlign: "center",
-                        color: "grey",
-                    }}
-                >
-                    www.aboutreact.com
-                </Text>
-            </View>
-        </SafeAreaView>
+            <Divider my={10} />
+            <Input
+                variant="outline"
+                placeholder="Search Contact"
+                placeholderTextColor={"#70B5F9"}
+                onChangeText={(searchTerm) => setSearchTerm(searchTerm)}
+            />
+            <Button
+                color="#70B5F9"
+                variant="solid"
+                mt={5}
+                _text={{ color: "#fff" }}
+                width={"100%"}
+            >
+                Search
+            </Button>
+            <Contact name="John Doe" avatarUrl={""} />
+            </Stack>
+            <Box flex={1} bg="white" safeAreaTop width="100%" maxW="300px" alignSelf="center">
+            <HStack bg="indigo.600" alignItems="center" safeAreaBottom shadow={6}>
+                    <Box alignItems="center">
+                        <IconButton
+                            icon={<Icon as={AntDesign} name="contacts" />}
+                            borderRadius="full"
+                            p={3}
+                            color="#70B5F9"
+                            variant={"solid"}
+                        />
+                        <Text color="muted.500">Phone Book</Text>
+                    </Box>
+                </HStack>
+                </Box>
+         </SafeAreaView>
     );
 };
 

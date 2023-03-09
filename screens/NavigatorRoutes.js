@@ -1,9 +1,9 @@
 import React from 'react';
 
 
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import { Ionicons } from '@expo/vector-icons';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 
 import HomeScreen from './DrawerScreens/HomeScreen';
 import SideMenu from './components/SideMenu';
@@ -13,7 +13,7 @@ import NavigationDrawerHeader from './components/NavigationDrawerHeader';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
-const HomeScreenStack = ({navigation}) => {
+const HomeScreenStack = ({ navigation }) => {
   return (
     <Stack.Navigator initialRouteName="HomeScreen">
       <Stack.Screen
@@ -33,16 +33,23 @@ const HomeScreenStack = ({navigation}) => {
           },
         }}
       />
+      <Stack.Screen
+        name="ProfilesScreen"
+        component={ProfileScreen}
+        options={{
+          title: 'Profile', //Set Header Title
+        }}
+      />
     </Stack.Navigator>
   );
 };
 
-const ProfileScreenStack = ({navigation}) => {
+const ProfileScreenStack = ({ navigation }) => {
   return (
     <Stack.Navigator
       initialRouteName="ProfilesScreen"
       screenOptions={{
-        headerLeft: () => (
+        headerRight: () => (
           <NavigationDrawerHeader navigationProps={navigation} />
         ),
         headerStyle: {
@@ -62,21 +69,22 @@ const ProfileScreenStack = ({navigation}) => {
       />
     </Stack.Navigator>
   );
-  
+
 };
 
 const NavigatorRoutes = (props) => {
   return (
     <Drawer.Navigator
-      drawerContentOptions={{
+      screenOptions={{
         activeTintColor: '#cee1f2',
         color: '#cee1f2',
-        itemStyle: {marginVertical: 5, color: 'white'},
+        itemStyle: { marginVertical: 5, color: 'white' },
         labelStyle: {
           color: '#d8d8d8',
         },
+        headerShown: false,
+        drawerPosition: "right"
       }}
-      screenOptions={{headerShown: false}}
       drawerContent={SideMenu}>
       <Drawer.Screen
         name="homeScreenStack"
@@ -93,8 +101,11 @@ const NavigatorRoutes = (props) => {
         options={{
           drawerLabel: 'Profile',
           drawerIcon: ({ color, size }) => (
-            <Ionicons name="person-outline" size={size} color={color} />
+            <MaterialIcons name="person" size={size} color={color} />
           ),
+          onPress: () => {
+            props.navigation.navigate('ProfilesScreen');
+          },
           subitems: [
             {
               label: 'My Profile',

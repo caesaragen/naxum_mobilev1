@@ -1,5 +1,6 @@
 import React from 'react';
 import { Alert, StyleSheet } from 'react-native';
+import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -28,7 +29,7 @@ const SideMenu = (props) => {
         <Avatar
           source={{
             uri:
-              'https://raw.githubusercontent.com/AboutReact/sampleresource/master/drawerWhite.png',
+              'https://as2.ftcdn.net/v2/jpg/00/65/77/27/1000_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg',
           }}
           size="lg"
         />
@@ -37,6 +38,13 @@ const SideMenu = (props) => {
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />
         <DrawerItem
+          icon={({ color, size }) => (
+            <Icon
+              as={<FontAwesome name="power-off" />}
+              size={5}
+              color={color}
+            />
+          )}
           label={({ color }) => (
             <Text color={useColorModeValue('gray.800', 'white')}>
               Logout

@@ -1,5 +1,7 @@
 import React from 'react';
 import {View, Image, TouchableOpacity} from 'react-native';
+import { MaterialIcons, AntDesign, SimpleLineIcons } from "@expo/vector-icons";
+import { Icon } from 'native-base';
 
 const NavigationDrawerHeader = (props) => {
   const toggleDrawer = () => {

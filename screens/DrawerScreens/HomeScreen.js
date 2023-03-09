@@ -81,8 +81,8 @@ const HomeScreen = () => {
                     >
                         Search
                     </Button>
-                    <Contact name="John Doe" avatarUrl={""} />
-                    <Contact name="John Doe" avatarUrl={""} />
+                    <Contact name="John Doe" avatarUrl={"https://as2.ftcdn.net/v2/jpg/00/65/77/27/1000_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg"} />
+                    <Contact name="John Doe" avatarUrl={"https://as2.ftcdn.net/v2/jpg/00/65/77/27/1000_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg"} />
                 </Stack>
             </ScrollView>
             <Box bg="white" safeAreaTop width="100%" maxW="100%" alignSelf="center">

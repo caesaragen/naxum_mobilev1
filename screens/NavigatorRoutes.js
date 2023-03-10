@@ -8,6 +8,7 @@ import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import HomeScreen from './DrawerScreens/HomeScreen';
 import SideMenu from './components/SideMenu';
 import ProfileScreen from './DrawerScreens/ProfileScreen';
+import Logout from './Logout';
 import NavigationDrawerHeader from './components/NavigationDrawerHeader';
 
 const Stack = createNativeStackNavigator();
@@ -39,6 +40,13 @@ const HomeScreenStack = ({ navigation }) => {
         options={{
           title: 'Profile', //Set Header Title
           headerTitleAlign: 'center', 
+        }}
+      />
+            <Stack.Screen
+        name="Logout"
+        component={Logout}
+        options={{
+          headerShown: false,
         }}
       />
     </Stack.Navigator>
@@ -117,7 +125,7 @@ const NavigatorRoutes = (props) => {
             {
               label: 'My Profile',
               onPress: () => {
-                props.navigation.navigate('MyProfile');
+                props.navigation.navigate('ProfilesScreen');
               },
             },
           ],

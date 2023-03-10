@@ -52,26 +52,27 @@ const SideMenu = (props) => {
           )}
           onPress={() => {
             props.navigation.toggleDrawer();
-            Alert.alert(
-              'Logout',
-              'Are you sure? You want to logout?',
-              [
-                {
-                  text: 'Cancel',
-                  onPress: () => {
-                    return null;
-                  },
-                },
-                {
-                  text: 'Confirm',
-                  onPress: () => {
-                    AsyncStorage.clear();
-                    props.navigation.replace('Auth');
-                  },
-                },
-              ],
-              { cancelable: false },
-            );
+            props.navigation.navigate("Logout")
+            // Alert.alert(
+            //   'Logout',
+            //   'Are you sure? You want to logout?',
+            //   [
+            //     {
+            //       text: 'Cancel',
+            //       onPress: () => {
+            //         return null;
+            //       },
+            //     },
+            //     {
+            //       text: 'Confirm',
+            //       onPress: () => {
+            //         AsyncStorage.clear();
+            //         props.navigation.replace('Auth');
+            //       },
+            //     },
+            //   ],
+            //   { cancelable: false },
+            // );
           }}
         />
       </DrawerContentScrollView>

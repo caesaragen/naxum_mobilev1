@@ -12,72 +12,72 @@ import {
     TouchableOpacity,
 } from "react-native";
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { UserContext } from "../context/UserContext";
 
 const Base_url = `https://f363-102-22-210-105.in.ngrok.io/api`;
 
-const Login = ({navigation}) => {
-    const [userName , setUserName] = useState("jaduma");
+const Login = ({ navigation }) => {
+    const [userName, setUserName] = useState("jaduma");
     const [password, setPassword] = useState("caesar342");
     const [show, setShow] = React.useState(false);
     const { userData, setUserData } = useContext(UserContext);
 
 
     const mutation = useMutation(
-      (data) => axios.post(`${Base_url}/login`, data),
-      {
-        onSuccess: (res) => {
-          // navigate to the next screen after successful login
-            console.log(res.data);
-            const user = res.data;
-            setUserData(user);
-          navigation.replace('NavigatorRoutes');
-        },
-        onError: (error) => {
-          console.log(error);
-        },
-      }
+        (data) => axios.post(`${Base_url}/login`, data),
+        {
+            onSuccess: (res) => {
+                const user = res.data;
+                AsyncStorage.setItem('userToken', user.token);
+                setUserData(user);
+                navigation.replace('NavigatorRoutes');
+            },
+            onError: (error) => {
+                console.log(error);
+            },
+        }
     );
 
     const handleSubmit = () => {
-      // send the post request with the username and password
-      mutation.mutate({
-        username: userName,
-        password: password,
-      });
+        // send the post request with the username and password
+        mutation.mutate({
+            username: userName,
+            password: password,
+        });
     };
 
     return (
-    <View style={styles.container}>
-        <StatusBar style="auto" />
-        <Stack space={4} w="75%" maxW="300px" mx="auto">
-            <Input
-                variant="underlined"
-                placeholder="Username"
-                placeholderTextColor={"#70B5F9"}
-                onChangeText={(userName) => setUserName(userName)}
-                InputLeftElement={<Icon as={<MaterialIcons name="person" />} size={5} mr="2" color="muted.400" />}
-            />
-            <Input
-                variant="underlined"
-                placeholder="Password"
-                placeholderTextColor={"#70B5F9"}
-                secureTextEntry={true}
-                onChangeText={(password) => setPassword(password)}
-                InputLeftElement={<Icon as={<MaterialIcons name="lock" />} size={5} mr="2" color="muted.400" />}
-            />
-            <TouchableOpacity
-            onPress={handleSubmit}
-            style={styles.loginBtn}>
-                <Text 
-                    // onPress={()=> navigation.replace('NavigatorRoutes')}
-                style={styles.loginText}
-                >LOGIN
-                </Text>
-            </TouchableOpacity>
-        </Stack>
-    </View>
+        <View style={styles.container}>
+            <StatusBar style="auto" />
+            <Stack space={4} w="75%" maxW="300px" mx="auto">
+                <Input
+                    variant="underlined"
+                    placeholder="Username"
+                    placeholderTextColor={"#70B5F9"}
+                    onChangeText={(userName) => setUserName(userName)}
+                    InputLeftElement={<Icon as={<MaterialIcons name="person" />} size={5} mr="2" color="muted.400" />}
+                />
+                <Input
+                    variant="underlined"
+                    placeholder="Password"
+                    placeholderTextColor={"#70B5F9"}
+                    secureTextEntry={true}
+                    onChangeText={(password) => setPassword(password)}
+                    InputLeftElement={<Icon as={<MaterialIcons name="lock" />} size={5} mr="2" color="muted.400" />}
+                />
+                <TouchableOpacity
+                    onPress={handleSubmit}
+                    style={styles.loginBtn}>
+                    <Text
+                        // onPress={()=> navigation.replace('NavigatorRoutes')}
+                        style={styles.loginText}
+                    >LOGIN
+                    </Text>
+                </TouchableOpacity>
+            </Stack>
+        </View>
     );
 };
 

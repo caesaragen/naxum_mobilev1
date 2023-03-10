@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, SafeAreaView, StyleSheet, ScrollView, SectionList } from "react-native";
 import {
     Heading,
@@ -16,9 +16,12 @@ import {
 } from "native-base";
 import { MaterialIcons, AntDesign, SimpleLineIcons } from "@expo/vector-icons";
 import Contact from "../components/Contact";
+import { UserContext } from "../../context/UserContext";
 
 const HomeScreen = () => {
     const [searchTerm, setSearchTerm] = useState("");
+    const { userData } = useContext(UserContext);
+
     return (
         <View style={styles.container}>
             <ScrollView>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Input, Icon, Stack, NativeBaseProvider, Center, HStack } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -11,17 +11,43 @@ import {
     Button,
     TouchableOpacity,
 } from "react-native";
+import axios from 'axios';
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { UserContext } from "../context/UserContext";
+
+const Base_url = `https://f363-102-22-210-105.in.ngrok.io/api`;
 
 const Login = ({navigation}) => {
-    const [userName , setUserName] = useState("");
-    const [password, setPassword] = useState("");
+    const [userName , setUserName] = useState("jaduma");
+    const [password, setPassword] = useState("caesar342");
     const [show, setShow] = React.useState(false);
+    const { userData, setUserData } = useContext(UserContext);
+
+
+    const mutation = useMutation(
+      (data) => axios.post(`${Base_url}/login`, data),
+      {
+        onSuccess: (res) => {
+          // navigate to the next screen after successful login
+            console.log(res.data);
+            const user = res.data;
+            setUserData(user);
+          navigation.replace('NavigatorRoutes');
+        },
+        onError: (error) => {
+          console.log(error);
+        },
+      }
+    );
 
     const handleSubmit = () => {
-        setTimeout(() => {
-        navigation.replace('NavigatorRoutes');
-        }, 3000);
-    }
+      // send the post request with the username and password
+      mutation.mutate({
+        username: userName,
+        password: password,
+      });
+    };
+
     return (
     <View style={styles.container}>
         <StatusBar style="auto" />
@@ -56,6 +82,7 @@ const Login = ({navigation}) => {
 };
 
 export default Login;
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

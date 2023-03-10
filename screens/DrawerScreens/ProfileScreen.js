@@ -126,6 +126,15 @@ const ProfileScreen = () => {
                   keyboardType="email-address"
                 />
               </FormControl>
+              <Button
+            variant="solid"
+            mt={4}
+            size="md"
+            width={"100%"}
+            onPress={() => console.log("Top Badges")}
+          >
+            Submit
+          </Button>
             </Stack>
           )}
         </Box>

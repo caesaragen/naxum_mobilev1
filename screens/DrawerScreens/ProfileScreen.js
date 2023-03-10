@@ -61,7 +61,7 @@ const ProfileScreen = () => {
           variant={selectedTab === "profile" ? "solid" : "outline"}
           onPress={() => setSelectedTab("profile")}
         >
-          Profil
+          Profile
         </Button>
         <Button
           variant={selectedTab === "social" ? "solid" : "outline"}
@@ -123,4 +123,4 @@ const styles = StyleSheet.create({
   },
 });
 
-       
+

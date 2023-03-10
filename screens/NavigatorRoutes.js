@@ -1,5 +1,5 @@
 import React from 'react';
-
+import {TouchableOpacity, Image} from 'react-native';
 
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -38,6 +38,7 @@ const HomeScreenStack = ({ navigation }) => {
         component={ProfileScreen}
         options={{
           title: 'Profile', //Set Header Title
+          headerTitleAlign: 'center', 
         }}
       />
     </Stack.Navigator>
@@ -46,28 +47,34 @@ const HomeScreenStack = ({ navigation }) => {
 
 const ProfileScreenStack = ({ navigation }) => {
   return (
-    <Stack.Navigator
-      initialRouteName="ProfilesScreen"
-      screenOptions={{
-        headerRight: () => (
-          <NavigationDrawerHeader navigationProps={navigation} />
-        ),
-        headerStyle: {
-          backgroundColor: '#307ecc', //Set Header color
-        },
-        headerTintColor: '#fff', //Set Header text color
-        headerTitleStyle: {
-          fontWeight: 'bold', //Set Header text style
-        },
-      }}>
-      <Stack.Screen
-        name="ProfilesScreen"
-        component={ProfileScreen}
-        options={{
-          title: 'Profile', //Set Header Title
-        }}
-      />
-    </Stack.Navigator>
+<Stack.Navigator
+  initialRouteName="ProfilesScreen"
+  screenOptions={{
+    headerStyle: {
+      backgroundColor: '#fff', //Set Header color
+    },
+    headerTintColor: '#307ecc', //Set Header text color
+    headerLeft: ({ onPress }) => (
+      <TouchableOpacity onPress={navigation.goBack}>
+        <Ionicons
+          name="chevron-back-outline"
+          size={30}
+          color="#307ecc"
+          style={{ marginLeft: 10 }}
+        />
+      </TouchableOpacity>
+    ),
+  }}>
+  <Stack.Screen
+    name="ProfilesScreen"
+    component={ProfileScreen}
+    options={{
+      title: 'Profile', //Set Header Title
+      headerTitleAlign: 'center', 
+    }}
+  />
+</Stack.Navigator>
+
   );
 
 };

@@ -19,7 +19,7 @@ const LoadingSpinner = () => {
         <HStack space={2} justifyContent="center" alignItems={"center"}>
             <Spinner accessibilityLabel="Loading " />
             <Heading color="primary.500" fontSize="md">
-                Loading
+                Loading...
             </Heading>
         </HStack>
     )

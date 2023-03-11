@@ -26,14 +26,17 @@ import LoadingSpinner from "../components/Spinner";
 const HomeScreen = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const { userData } = useContext(UserContext);
-    const [show, setShow] = useState(false);
+    const [show, setShow] = useState(true);
     const [firstName, setFirstName] = useState("Sodiq");
     const [lastName, setLastName] = useState("ddd");
     const [mobile, setMobile] = useState("08012355678");
     const [contacts, setContacts] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [filteredContacts, setFilteredContacts] = useState([]);
+    const [filteredContacts, setFilteredContacts] = useState(contacts);
+    const [inputValue, setInputValue] = useState("");
+    const [selectedTab, setSelectedTab] = useState("new");
+    const [toggleOnSearch, setToggleOnSearch] = useState(false);
 
     console.log(Base_url)
     const handleSubmit = async () => {
@@ -51,7 +54,7 @@ const HomeScreen = () => {
             const response = await axios.post(`${Base_url}/contacts`, data, config);
             if (response.status === 201) {
                 console.log(response.data);
-                setShow(!show);
+                // setShow(!show);
             }
             // Show success message or navigate to contacts list screen
         } catch (error) {
@@ -90,15 +93,21 @@ const HomeScreen = () => {
         setFilteredContacts(contacts);
     }, []);
 
-    const handleSearch = (searchTerm) => {
-        const filtered = contacts.filter(contact => {
-            const name = `${contact.first_name} ${contact.last_name}`.toLowerCase();
-            // const phone = contact.phone.toLowerCase();
-            const term = searchTerm.toLowerCase();
-            return name.includes(term);
-        });
-        setFilteredContacts(filtered);
+    const handleSearch = (value) => {
+        setInputValue(value);
+        if (!value) {
+            setFilteredContacts(contacts);
+        } else {
+            const filtered = contacts.filter(contact => {
+                const name = `${contact.first_name} ${contact.last_name}`.toLowerCase();
+                const term = value.toLowerCase();
+                return name.includes(term);
+            });
+            setFilteredContacts(filtered);
+        }
     };
+
+
 
     if (isLoading) {
         return <View>
@@ -127,8 +136,12 @@ const HomeScreen = () => {
                                     borderRadius="full"
                                     p={3}
                                     color="#70B5F9"
-                                    variant={"solid"}
-                                    onPress={() => setShow(!show)}
+                                    variant={selectedTab === "new" ? "solid" : "outline"}
+                                    onPress={() => {
+                                        setShow(true);
+                                        // setFilteredContacts([]);
+                                        setSelectedTab("new");
+                                    }}
                                 />
                                 <Text color="muted.500">New</Text>
                             </Box>
@@ -140,7 +153,11 @@ const HomeScreen = () => {
                                     borderRadius="full"
                                     p={3}
                                     color="#70B5F9"
-                                    variant={"solid"}
+                                    variant={selectedTab === "phonebook" ? "solid" : "outline"}
+                                    onPress={() => {
+                                        setShow(false);
+                                        setSelectedTab("phonebook");
+                                    }}
                                 />
                                 <Text color="muted.500">Phone Book</Text>
                             </Box>
@@ -152,7 +169,7 @@ const HomeScreen = () => {
                                     borderRadius="full"
                                     p={3}
                                     color="#70B5F9"
-                                    variant={"solid"}
+                                    variant={selectedTab === "email" ? "solid" : "outline"}
                                 />
                                 <Text color="muted.500">Email</Text>
                             </Box>
@@ -194,39 +211,51 @@ const HomeScreen = () => {
                         </VStack>
                     ) : null}
                     <Divider my={10} />
-                    <Input
-                        variant="outline"
-                        placeholder="Search Contact"
-                        placeholderTextColor={"#70B5F9"}
-                        onChangeText={(searchTerm) => handleSearch(searchTerm)}
-                    />
-                    <Button
-                        onPress={() => handleSearch(searchTerm)}
-                        color="#70B5F9"
-                        variant="solid"
-                        mt={5}
-                        _text={{ color: "#fff" }}
-                        width={"100%"}
-                    >
-                        Search
-                    </Button>
-                    {filteredContacts.map((contact) => (
-                        <Contact
-                            key={contact.id}
-                            name={`${contact.first_name} ${contact.last_name}`}
-                            avatarUrl={
-                                "https://as2.ftcdn.net/v2/jpg/00/65/77/27/1000_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg"
-                            }
-                        />
-                    ))}
-                    {/* {contacts.map((contact) => (
-                        <Contact
-                            key={contact.id}
-                            name={`${contact.first_name} ${contact.last_name}`}
-                            avatarUrl={contact.avatarUrl || "https://as2.ftcdn.net/v2/jpg/00/65/77/27/1000_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg"}
-                        />
-                    ))} */}
+                    {selectedTab === "phonebook" && (
+                        <>
+                            <Input
+                                value={inputValue}
+                                variant="outline"
+                                placeholder="Search Contact"
+                                placeholderTextColor={"#70B5F9"}
+                                onChangeText={(value) => handleSearch(value)}
+                            />
+                            <Button
+                                onPress={() => handleSearch(searchTerm)}
+                                color="#70B5F9"
+                                variant="solid"
+                                mt={5}
+                                _text={{ color: "#fff" }}
+                                width={"100%"}
+                            >
+                                Search
+                            </Button>
+                            {inputValue !== "" ? (
+                                filteredContacts.map((contact) => (
+                                    <Contact
+                                        key={contact.id}
+                                        name={`${contact.first_name} ${contact.last_name}`}
+                                        avatarUrl={
+                                            "https://as2.ftcdn.net/v2/jpg/00/65/77/27/1000_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg"
+                                        }
+                                    />
+                                ))
+                            ) : (
+                                contacts.map((contact) => (
+                                    <Contact
+                                        key={contact.id}
+                                        name={`${contact.first_name} ${contact.last_name}`}
+                                        avatarUrl={contact.avatarUrl || "https://as2.ftcdn.net/v2/jpg/00/65/77/27/1000_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg"}
+                                    />
+                                ))
+                            )}
+                        </>
+                    )}
+
+
+
                 </Stack>
+
             </ScrollView>
             <Box bg="white" safeAreaTop width="100%" maxW="100%" alignSelf="center">
                 <VStack bg="#307ecc" alignItems="flex-start" safeAreaBottom shadow={6} justifyContent="center" >

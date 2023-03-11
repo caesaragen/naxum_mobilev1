@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import {
   Avatar,
@@ -14,6 +14,14 @@ import {
   Text,
 } from "native-base";
 import { MaterialIcons, Ionicons } from "@expo/vector-icons";
+import { UserContext } from "../../context/UserContext";
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { Base_url } from '@env';
+
+
+// console.log(Base_url)
 
 const ProfileScreen = () => {
   const [firstName, setFirstName] = useState("");
@@ -21,7 +29,63 @@ const ProfileScreen = () => {
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
   const [selectedTab, setSelectedTab] = useState("profile");
+  const { userData, setUserData } = useContext(UserContext);
+  const [error, setError] = useState("");
 
+
+  useEffect(() => {
+    if (!firstName || !lastName || !mobile) {
+      setError("Please fill in all fields");
+    }
+    setError("");
+  }, [firstName, lastName, mobile]);
+
+  const handleSubmit = async () => {
+    if (error) {
+      return;
+    }
+
+    const data = {
+      first_name: firstName,
+      last_name: lastName,
+      phone: mobile,
+      email: email
+    };
+
+ 
+    const token = await AsyncStorage.getItem('userToken');
+
+    const config = {
+      headers: { Authorization: `Bearer ${token}` }
+    };
+
+    try {
+      const response = await axios.put(`${Base_url}/profile`, data, config);
+
+      if (response.status === 200) {
+        alert('Profile updated successfully')
+        setUserData({
+          ...userData,
+          first_name: response.data.first_name,
+          last_name: response.data.last_name,
+          phone: response.data.phone,
+          email: response.data.email
+        });
+        setFirstName("");
+        setLastName("");
+        setMobile("");
+        setEmail("");
+
+      }
+    } catch (error) {
+      // Handle error
+      console.log(error);
+    }
+  };
+
+
+
+  console.log(userData.user);
   return (
     <View style={styles.container}>
       <Stack space={4} w="100%" maxW="300px" mx="auto" alignItems="center">
@@ -33,22 +97,22 @@ const ProfileScreen = () => {
           alignItems="center"
           justifyContent="center"
         >
-<Avatar
-  source={{
-    uri:
-    "https://as2.ftcdn.net/v2/jpg/00/65/77/27/1000_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg",
-  }}
-  size="2xl"
-  style={styles.avatar}
->
-  <Avatar.Badge style={styles.badge}>
-    <Icon
-      as={<Ionicons name="md-pencil" />}
-      color="#fff"
-      size={5}
-    />
-  </Avatar.Badge>
-</Avatar>
+          <Avatar
+            source={{
+              uri:
+                "https://as2.ftcdn.net/v2/jpg/00/65/77/27/1000_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg",
+            }}
+            size="2xl"
+            style={styles.avatar}
+          >
+            <Avatar.Badge style={styles.badge}>
+              <Icon
+                as={<Ionicons name="md-pencil" />}
+                color="#fff"
+                size={5}
+              />
+            </Avatar.Badge>
+          </Avatar>
           <Button
             variant="solid"
             mt={4}
@@ -89,52 +153,49 @@ const ProfileScreen = () => {
         <Box p={4} width={"100%"}>
           {selectedTab === "profile" && (
             <Stack space={4} width={"100%"}>
-              <FormControl>
+              <FormControl isInvalid={!!error}>
                 <Input
                   variant="underlined"
-                  placeholder="First Name"
+                  placeholder={"First Name"}
                   isRequired
                   value={firstName}
                   onChangeText={(value) => setFirstName(value)}
                 />
-              </FormControl>
-              <FormControl>
+
                 <Input
                   variant={"underlined"}
-                  placeholder="Last Name"
+                  placeholder={"Last Name"}
                   isRequired
                   value={lastName}
                   onChangeText={(value) => setLastName(value)}
                 />
-              </FormControl>
-              <FormControl>
+
                 <Input
                   variant={"underlined"}
-                  placeholder="Mobile"
+                  placeholder={"Mobile"}
                   isRequired
                   value={mobile}
                   onChangeText={(value) => setMobile(value)}
                   keyboardType="phone-pad"
                 />
-              </FormControl>
-              <FormControl>
+
                 <Input
                   variant={"underlined"}
-                  placeholder="Email"
+                  placeholder={"Email"}
                   value={email}
                   onChangeText={(value) => setEmail(value)}
                   keyboardType="email-address"
                 />
               </FormControl>
               <Button
-            variant="solid"
-            mt={4}
-            size="md"
-            width={"100%"}
-            onPress={() => console.log("Top Badges")}
-          >
-            Submit
-          </Button>
+                variant="solid"
+                mt={4}
+                size="md"
+                width={"100%"}
+                onPress={handleSubmit}
+              >
+                Submit
+              </Button>
             </Stack>
           )}
         </Box>
@@ -171,7 +232,6 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-
 });
 
 

@@ -1,5 +1,5 @@
-import React, { useState, useContext } from "react";
-import { View, SafeAreaView, StyleSheet, ScrollView, SectionList } from "react-native";
+import React, { useState, useContext, useEffect } from "react";
+import { View, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import {
     Heading,
     Text,
@@ -17,11 +17,86 @@ import {
 import { MaterialIcons, AntDesign, SimpleLineIcons } from "@expo/vector-icons";
 import Contact from "../components/Contact";
 import { UserContext } from "../../context/UserContext";
+import { Base_url } from '@env';
+import axios from 'axios';
+import { useQuery, useMutation } from "@tanstack/react-query";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import LoadingSpinner from "../components/Spinner";
 
 const HomeScreen = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const { userData } = useContext(UserContext);
+    const [show, setShow] = useState(false);
+    const [firstName, setFirstName] = useState("Sodiq");
+    const [lastName, setLastName] = useState("ddd");
+    const [mobile, setMobile] = useState("08012355678");
+    const [contacts, setContacts] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
 
+    console.log(Base_url)
+    const handleSubmit = async () => {
+        try {
+            const token = await AsyncStorage.getItem('userToken');
+            console.log(token)
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
+            const data = {
+                first_name: firstName,
+                last_name: lastName,
+                phone: mobile
+            };
+            const response = await axios.post(`${Base_url}/contacts`, data, config);
+            if (response.status === 201) {
+                console.log(response.data);
+                setShow(!show);
+            }
+            // Show success message or navigate to contacts list screen
+        } catch (error) {
+            console.error(error);
+            // Show error message to user
+        }
+    };
+
+    const fetchContacts = async () => {
+        try {
+          const token = await AsyncStorage.getItem('userToken');
+          const response = await axios.get(`${Base_url}/contacts`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setContacts(response.data);
+          setIsLoading(false);
+        } catch (error) {
+          setError(error);
+          setIsLoading(false);
+        }
+      };
+    
+      useEffect(() => {
+        fetchContacts();
+      }, []);
+    
+      const handleRefresh = () => {
+        setIsLoading(true);
+        fetchContacts();
+      };
+    
+
+
+    if (isLoading) {
+        return <View>
+            <LoadingSpinner />
+        </View>;
+    }
+
+    if (error) {
+        return <View>
+            <Text>Error: {error.message}</Text>
+        </View>;
+    }
     return (
         <View style={styles.container}>
             <ScrollView>
@@ -39,6 +114,7 @@ const HomeScreen = () => {
                                     p={3}
                                     color="#70B5F9"
                                     variant={"solid"}
+                                    onPress={() => setShow(!show)}
                                 />
                                 <Text color="muted.500">New</Text>
                             </Box>
@@ -68,6 +144,41 @@ const HomeScreen = () => {
                             </Box>
                         </VStack>
                     </HStack>
+                    {show ? (
+                        <VStack space={2} mt={5} w="100%" maxW="300px">
+                            <Input
+                                variant="underlined"
+                                placeholder="First Name"
+                                placeholderTextColor={"#70B5F9"}
+                                onChangeText={(firstName) => setFirstName(firstName)}
+                                InputLeftElement={<Icon as={<MaterialIcons name="person" />} size={5} mr="2" color="muted.400" />}
+                            />
+                            <Input
+                                variant="underlined"
+                                placeholder="Last Name"
+                                placeholderTextColor={"#70B5F9"}
+                                onChangeText={(lastName) => setLastName(lastName)}
+                                InputLeftElement={<Icon as={<MaterialIcons name="person" />} size={5} mr="2" color="muted.400" />}
+                            />
+                            <Input
+                                variant="underlined"
+                                placeholder="Phone Number"
+                                placeholderTextColor={"#70B5F9"}
+                                keyboardType="phone-pad"
+                                onChangeText={(mobile) => setMobile(mobile)}
+                                InputLeftElement={<Icon as={<MaterialIcons name="phone" />} size={5} mr="2" color="muted.400" />}
+                            />
+                            <TouchableOpacity
+                                onPress={handleSubmit}
+                                style={styles.loginBtn}>
+                                <Text
+
+                                    style={styles.loginText}
+                                >Add Contact
+                                </Text>
+                            </TouchableOpacity>
+                        </VStack>
+                    ) : null}
                     <Divider my={10} />
                     <Input
                         variant="outline"
@@ -84,8 +195,13 @@ const HomeScreen = () => {
                     >
                         Search
                     </Button>
-                    <Contact name="John Doe" avatarUrl={"https://as2.ftcdn.net/v2/jpg/00/65/77/27/1000_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg"} />
-                    <Contact name="John Doe" avatarUrl={"https://as2.ftcdn.net/v2/jpg/00/65/77/27/1000_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg"} />
+                    {contacts.map((contact) => (
+                        <Contact
+                            key={contact.id}
+                            name={`${contact.first_name} ${contact.last_name}`}
+                            avatarUrl={contact.avatarUrl || "https://as2.ftcdn.net/v2/jpg/00/65/77/27/1000_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg"}
+                        />
+                    ))}
                 </Stack>
             </ScrollView>
             <Box bg="white" safeAreaTop width="100%" maxW="100%" alignSelf="center">
@@ -93,6 +209,7 @@ const HomeScreen = () => {
                     <Box p={2} alignItems={"center"}>
                         <IconButton
                             icon={<Icon as={AntDesign} name="contacts" color="#70B5F9" />}
+                            onPress={handleRefresh}
                             borderRadius="full"
                             width={10} height={10}
                             color="#70B5F9"

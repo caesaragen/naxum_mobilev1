@@ -16,12 +16,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { UserContext } from "../context/UserContext";
 
-const Base_url = `https://f363-102-22-210-105.in.ngrok.io/api`;
+const Base_url = process.env.Base_url;
+console.log(Base_url)
 
 const Login = ({ navigation }) => {
     const [userName, setUserName] = useState("jaduma");
     const [password, setPassword] = useState("caesar342");
-    const [show, setShow] = React.useState(false);
+    const [show, setShow] = useState(false);
     const { userData, setUserData } = useContext(UserContext);
 
 
@@ -41,7 +42,6 @@ const Login = ({ navigation }) => {
     );
 
     const handleSubmit = () => {
-        // send the post request with the username and password
         mutation.mutate({
             username: userName,
             password: password,

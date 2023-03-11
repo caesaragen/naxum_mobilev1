@@ -33,6 +33,7 @@ const HomeScreen = () => {
     const [contacts, setContacts] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [filteredContacts, setFilteredContacts] = useState([]);
 
     console.log(Base_url)
     const handleSubmit = async () => {
@@ -61,30 +62,43 @@ const HomeScreen = () => {
 
     const fetchContacts = async () => {
         try {
-          const token = await AsyncStorage.getItem('userToken');
-          const response = await axios.get(`${Base_url}/contacts`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          setContacts(response.data);
-          setIsLoading(false);
+            const token = await AsyncStorage.getItem('userToken');
+            const response = await axios.get(`${Base_url}/contacts`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setContacts(response.data);
+            setIsLoading(false);
         } catch (error) {
-          setError(error);
-          setIsLoading(false);
+            setError(error);
+            setIsLoading(false);
         }
-      };
-    
-      useEffect(() => {
+    };
+
+    useEffect(() => {
         fetchContacts();
-      }, []);
-    
-      const handleRefresh = () => {
+    }, []);
+
+    const handleRefresh = () => {
         setIsLoading(true);
         fetchContacts();
-      };
-    
+    };
 
+    useEffect(() => {
+        setContacts(contacts); // assume data is the original contacts list from the API
+        setFilteredContacts(contacts);
+    }, []);
+
+    const handleSearch = (searchTerm) => {
+        const filtered = contacts.filter(contact => {
+            const name = `${contact.first_name} ${contact.last_name}`.toLowerCase();
+            // const phone = contact.phone.toLowerCase();
+            const term = searchTerm.toLowerCase();
+            return name.includes(term);
+        });
+        setFilteredContacts(filtered);
+    };
 
     if (isLoading) {
         return <View>
@@ -184,9 +198,10 @@ const HomeScreen = () => {
                         variant="outline"
                         placeholder="Search Contact"
                         placeholderTextColor={"#70B5F9"}
-                        onChangeText={(searchTerm) => setSearchTerm(searchTerm)}
+                        onChangeText={(searchTerm) => handleSearch(searchTerm)}
                     />
                     <Button
+                        onPress={() => handleSearch(searchTerm)}
                         color="#70B5F9"
                         variant="solid"
                         mt={5}
@@ -195,13 +210,22 @@ const HomeScreen = () => {
                     >
                         Search
                     </Button>
-                    {contacts.map((contact) => (
+                    {filteredContacts.map((contact) => (
+                        <Contact
+                            key={contact.id}
+                            name={`${contact.first_name} ${contact.last_name}`}
+                            avatarUrl={
+                                "https://as2.ftcdn.net/v2/jpg/00/65/77/27/1000_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg"
+                            }
+                        />
+                    ))}
+                    {/* {contacts.map((contact) => (
                         <Contact
                             key={contact.id}
                             name={`${contact.first_name} ${contact.last_name}`}
                             avatarUrl={contact.avatarUrl || "https://as2.ftcdn.net/v2/jpg/00/65/77/27/1000_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg"}
                         />
-                    ))}
+                    ))} */}
                 </Stack>
             </ScrollView>
             <Box bg="white" safeAreaTop width="100%" maxW="100%" alignSelf="center">

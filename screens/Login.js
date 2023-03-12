@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { StatusBar } from "expo-status-bar";
-import { Input, Icon, Stack, NativeBaseProvider, Center, HStack } from "native-base";
+import { Input, Icon, Stack, NativeBaseProvider, Center, Button,} from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import {
     StyleSheet,
@@ -8,7 +8,6 @@ import {
     View,
     Image,
     TextInput,
-    Button,
     TouchableOpacity,
 } from "react-native";
 import axios from 'axios';
@@ -24,6 +23,7 @@ const Login = ({ navigation }) => {
     const [password, setPassword] = useState("");
     const [show, setShow] = useState(false);
     const { userData, setUserData } = useContext(UserContext);
+    const [submitting, setSubmitting] = useState(false);
 
 
     const mutation = useMutation(
@@ -33,15 +33,18 @@ const Login = ({ navigation }) => {
                 const user = res.data;
                 AsyncStorage.setItem('userToken', user.token);
                 setUserData(user);
+                setSubmitting(false);
                 navigation.replace('NavigatorRoutes');
             },
             onError: (error) => {
                 console.log(error);
+                setSubmitting(false);
             },
         }
     );
 
     const handleSubmit = () => {
+        setSubmitting(true),
         mutation.mutate({
             username: userName,
             password: password,
@@ -67,7 +70,7 @@ const Login = ({ navigation }) => {
                     onChangeText={(password) => setPassword(password)}
                     InputLeftElement={<Icon as={<MaterialIcons name="lock" />} size={5} mr="2" color="muted.400" />}
                 />
-                <TouchableOpacity
+                <Button isLoading={submitting} spinnerPlacement="end" isLoadingText="Submitting"
                     onPress={handleSubmit}
                     style={styles.loginBtn}>
                     <Text
@@ -75,7 +78,7 @@ const Login = ({ navigation }) => {
                         style={styles.loginText}
                     >LOGIN
                     </Text>
-                </TouchableOpacity>
+                </Button>
             </Stack>
         </View>
     );

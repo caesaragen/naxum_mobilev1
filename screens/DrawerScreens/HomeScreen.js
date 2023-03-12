@@ -36,10 +36,11 @@ const HomeScreen = () => {
     const [filteredContacts, setFilteredContacts] = useState(contacts);
     const [inputValue, setInputValue] = useState("");
     const [selectedTab, setSelectedTab] = useState("new");
-    const [toggleOnSearch, setToggleOnSearch] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
 
-    console.log(Base_url)
+    // console.log(Base_url)
     const handleSubmit = async () => {
+        setSubmitting(true);
         try {
             const token = await AsyncStorage.getItem('userToken');
             console.log(token)
@@ -53,13 +54,16 @@ const HomeScreen = () => {
             };
             const response = await axios.post(`${Base_url}/contacts`, data, config);
             if (response.status === 201) {
-                console.log(response.data);
-                // setShow(!show);
+                setSubmitting(false);
+                setFirstName("");
+                setLastName("");
+                setMobile("");
             }
             // Show success message or navigate to contacts list screen
         } catch (error) {
             console.error(error);
-            // Show error message to user
+            setError(error);
+            setSubmitting(false);
         }
     };
 
@@ -107,7 +111,7 @@ const HomeScreen = () => {
         }
     };
 
-
+    // console.log(contacts)
 
     if (isLoading) {
         return <View>
@@ -199,7 +203,7 @@ const HomeScreen = () => {
                                 onChangeText={(mobile) => setMobile(mobile)}
                                 InputLeftElement={<Icon as={<MaterialIcons name="phone" />} size={5} mr="2" color="muted.400" />}
                             />
-                            <TouchableOpacity
+                            <Button isLoading={submitting} spinnerPlacement="end" isLoadingText="Submitting"
                                 onPress={handleSubmit}
                                 style={styles.loginBtn}>
                                 <Text
@@ -207,7 +211,7 @@ const HomeScreen = () => {
                                     style={styles.loginText}
                                 >Add Contact
                                 </Text>
-                            </TouchableOpacity>
+                            </Button>
                         </VStack>
                     ) : null}
                     <Divider my={10} />
@@ -234,7 +238,7 @@ const HomeScreen = () => {
                                 filteredContacts.map((contact) => (
                                     <Contact
                                         key={contact.id}
-                                        name={`${contact.first_name} ${contact.last_name}`}
+                                        name={contact.name}
                                         avatarUrl={
                                             "https://as2.ftcdn.net/v2/jpg/00/65/77/27/1000_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg"
                                         }
@@ -244,7 +248,7 @@ const HomeScreen = () => {
                                 contacts.map((contact) => (
                                     <Contact
                                         key={contact.id}
-                                        name={`${contact.first_name} ${contact.last_name}`}
+                                        name={contact.name}
                                         avatarUrl={contact.avatarUrl || "https://as2.ftcdn.net/v2/jpg/00/65/77/27/1000_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg"}
                                     />
                                 ))

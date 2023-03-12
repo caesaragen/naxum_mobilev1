@@ -31,6 +31,7 @@ const ProfileScreen = () => {
   const [selectedTab, setSelectedTab] = useState("profile");
   const { userData, setUserData } = useContext(UserContext);
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
 
   useEffect(() => {
@@ -44,7 +45,7 @@ const ProfileScreen = () => {
     if (error) {
       return;
     }
-
+    setSubmitting(true);
     const data = {
       first_name: firstName,
       last_name: lastName,
@@ -63,6 +64,7 @@ const ProfileScreen = () => {
       const response = await axios.put(`${Base_url}/profile`, data, config);
 
       if (response.status === 200) {
+        setSubmitting(false);
         alert('Profile updated successfully')
         setUserData({
           ...userData,
@@ -80,6 +82,7 @@ const ProfileScreen = () => {
     } catch (error) {
       // Handle error
       console.log(error);
+      setSubmitting(false);
     }
   };
 
@@ -187,7 +190,7 @@ const ProfileScreen = () => {
                   keyboardType="email-address"
                 />
               </FormControl>
-              <Button
+              <Button isLoading={submitting} spinnerPlacement="end" isLoadingText="Submitting"
                 variant="solid"
                 mt={4}
                 size="md"

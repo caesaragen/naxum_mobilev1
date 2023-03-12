@@ -20,8 +20,8 @@ const Base_url = process.env.Base_url;
 console.log(Base_url)
 
 const Login = ({ navigation }) => {
-    const [userName, setUserName] = useState("jaduma");
-    const [password, setPassword] = useState("caesar342");
+    const [userName, setUserName] = useState("");
+    const [password, setPassword] = useState("");
     const [show, setShow] = useState(false);
     const { userData, setUserData } = useContext(UserContext);
 

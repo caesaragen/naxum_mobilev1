@@ -103,7 +103,7 @@ const HomeScreen = () => {
             setFilteredContacts(contacts);
         } else {
             const filtered = contacts.filter(contact => {
-                const name = `${contact.first_name} ${contact.last_name}`.toLowerCase();
+                const name = `${contact.name}`.toLowerCase();
                 const term = value.toLowerCase();
                 return name.includes(term);
             });

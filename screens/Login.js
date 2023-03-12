@@ -74,7 +74,6 @@ const Login = ({ navigation }) => {
                     onPress={handleSubmit}
                     style={styles.loginBtn}>
                     <Text
-                        // onPress={()=> navigation.replace('NavigatorRoutes')}
                         style={styles.loginText}
                     >LOGIN
                     </Text>
